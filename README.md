@@ -1,56 +1,104 @@
-# Welcome to your Expo app 👋
+# 🎧 FlowState — Intelligent Music Player & DJ Sequencer
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**FlowState** is a high-performance, cross-platform music application built with **React Native**, **Expo SDK 57**, and **Expo Router (`NativeTabs`)**. Designed with high-frequency audio analysis, intelligent BPM sequencing algorithms, activity-aware cadence synchronization, and customizable theme engines.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features Matrix
 
+| Feature | Description | Status |
+| :--- | :--- | :---: |
+| 🎛️ **Intelligent Sequencing** | Multi-mode BPM sorting (`Ascend`, `Descend`, `Valley`, `Peak`, `Smart Energy`) | ✅ Implemented |
+| 🎚️ **Seamless Transitions** | Crossfade, Echo Tail, and Beat-Matched transition blend zones | ✅ Implemented |
+| 🎨 **6 Theme Engines** | Studio, Club, Midnight, Vinyl, Prism, and High Contrast palettes | ✅ Implemented |
+| 👆 **Gesture Mechanics** | Pan swipe gestures with theme-matched visual trails & `expo-haptics` | ✅ Implemented |
+| 🏃 **Activity Sync** | Step sensor cadence matching, live HR tracking & BPM recommendation | ✅ Implemented |
+| 📊 **On-Device Analysis** | Musical key detection, BPM estimation, energy/danceability scoring | ✅ Implemented |
+| 🏷️ **Universal Formats** | Multi-format support (`MP3`, `AAC`, `FLAC`, `WAV`, `OGG`, `OPUS`) | ✅ Implemented |
+
+---
+
+## 🏗️ Architecture & Stack
+
+- **Framework**: [Expo SDK 57](https://docs.expo.dev/) (React Native `0.86.0` + React 19)
+- **Routing & Navigation**: Expo Router with `unstable-native-tabs` (`NativeTabs`) and native `Stack` layouts
+- **Animation & Gestures**: `react-native-reanimated` v4 + `react-native-gesture-handler`
+- **State & Persistence**: Custom `ThemeContext` with `@react-native-async-storage/async-storage`
+- **Haptic Engine**: `expo-haptics` with contextual feedback profiles
+- **Typography & UI**: Native UIKit/Material 3 semantics, liquid glass adaptations, and tabular numerals
+
+```
+src/
+├── app/                  # Expo Router file-based routes ONLY
+│   ├── _layout.tsx       # Root layout (NativeTabs & ThemeProvider)
+│   ├── (library)/        # Library stack & track detail sheet
+│   ├── (player)/         # Now Playing stack & gesture canvas
+│   ├── (queue)/          # Intelligent queue & sequencer stack
+│   ├── (activity)/       # Step-sensor & cadence mode stack
+│   └── (settings)/       # Settings & live theme preview modal
+├── components/           # Reusable atomic UI components
+├── data/                 # Mock track library & sequencing math utilities
+├── screens/              # Screen body implementations
+└── theme/                # Theme tokens, semantic colors, and context
+```
+
+---
+
+## 🎨 Theme System
+
+FlowState features 6 built-in, hand-crafted theme palettes. Each theme controls primary backgrounds, elevated surfaces, dynamic gradients, gesture trails, tab active indicators, and lossless format badges:
+
+1. 🎙️ **Studio** — Deep charcoal `#0d0d0f` with warm studio amber `#f0a030`
+2. 🪩 **Club** — Midnight black `#050507` with UV neon magenta `#cc44ff`
+3. 🌌 **Midnight** — Oceanic navy `#060c18` with cyan pulse `#22d4e8`
+4. 📻 **Vinyl** — Vintage sepia `#12100c` with analog rust `#e06030`
+5. 🌈 **Prism** — Dark neutral `#0a0a0e` with rainbow spectrum accents
+6. ⚡ **High Contrast** — Pure black `#000000` with high-visibility yellow `#ffee00`
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+
+- Node.js ≥ 20.x
+- Bun / npm / yarn
+- Expo Go app on iOS/Android or Xcode Simulator / Android Studio Emulator
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/flowstate.git
+   cd flowstate
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the Expo development server**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🧪 Verification & Quality Control
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+To verify types and run code quality checks across the codebase:
 
 ```bash
-npm run reset-project
+# Type-check TypeScript sources
+npx tsc --noEmit
+
+# Run Expo Linter
+npx expo lint
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## 📄 License
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Distributed under the MIT License. See `LICENSE` for more information.
