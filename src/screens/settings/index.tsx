@@ -164,7 +164,7 @@ export function SettingsScreen() {
         </View>
       </View>
 
-      {/* ── Themes / Appearance ── */}
+      {/* ── Themes / Appearance Section ── */}
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingRight: 20 }}>
         <SectionHeader title="Appearance & Themes" theme={theme} />
         <Pressable
@@ -179,7 +179,70 @@ export function SettingsScreen() {
         </Pressable>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 4 }}>
+      {/* Active Theme Spotlight Card */}
+      <View style={{ paddingHorizontal: 20, marginBottom: 14 }}>
+        <View
+          style={{
+            backgroundColor: theme.surface,
+            borderRadius: 22,
+            borderWidth: 1,
+            borderColor: theme.border,
+            padding: 16,
+            gap: 14,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View style={{ gap: 2 }}>
+              <Text style={{ color: theme.textMuted, fontSize: 10, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1 }}>
+                ACTIVE PALETTE
+              </Text>
+              <Text style={{ color: theme.textPrimary, fontSize: 18, fontWeight: "800" }}>
+                {theme.label} Theme
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: `${theme.accent}20`,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 12,
+                borderWidth: 1,
+                borderColor: `${theme.accent}40`,
+              }}
+            >
+              <Text style={{ color: theme.accent, fontSize: 11, fontWeight: "800" }}>ACTIVE</Text>
+            </View>
+          </View>
+
+          {/* Color Palette Swatches Bar */}
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            {[
+              { label: "Accent", color: theme.accent },
+              { label: "Surface", color: theme.surfaceElevated },
+              { label: "Waveform", color: theme.waveform },
+              { label: "Text", color: theme.textPrimary },
+              { label: "Background", color: theme.bg },
+            ].map((swatch) => (
+              <View key={swatch.label} style={{ flex: 1, alignItems: "center", gap: 4 }}>
+                <View
+                  style={{
+                    width: "100%",
+                    height: 28,
+                    borderRadius: 8,
+                    backgroundColor: swatch.color,
+                    borderWidth: 1,
+                    borderColor: "rgba(255,255,255,0.12)",
+                  }}
+                />
+                <Text style={{ color: theme.textMuted, fontSize: 9, fontWeight: "600" }}>{swatch.label}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+
+      {/* Theme Cards Carousel */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 16 }}>
         {ALL_THEME_NAMES.map((name) => (
           <ThemeCard
             key={name}
@@ -189,6 +252,31 @@ export function SettingsScreen() {
           />
         ))}
       </ScrollView>
+
+      {/* Display & Interface Customization Toggles */}
+      <View style={{ paddingHorizontal: 20, gap: 8, marginBottom: 8 }}>
+        <ToggleRow
+          icon="blur-on"
+          title="Adaptive Glassmorphism"
+          desc="Enable real-time background blur & glass effects"
+          defaultOn={true}
+          theme={theme}
+        />
+        <ToggleRow
+          icon="palette"
+          title="Album Art Theme Glow"
+          desc="Tint playback screens with active track colors"
+          defaultOn={true}
+          theme={theme}
+        />
+        <ToggleRow
+          icon="touch-app"
+          title="Tactile Haptic Trails"
+          desc="Vibrate with theme accent feedback on touch gestures"
+          defaultOn={true}
+          theme={theme}
+        />
+      </View>
 
       {/* ── Playback ── */}
       <SectionHeader title="Playback" theme={theme} />
