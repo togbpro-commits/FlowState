@@ -9,26 +9,48 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "@/theme/theme-context";
 import { MOCK_ACTIVITY, MOCK_HR_CHART, MOCK_TRACKS, formatDuration } from "@/data/mock-tracks";
 import { BpmBadge } from "@/components/bpm-badge";
+import { FormatBadge } from "@/components/format-badge";
+import { WaveformBars } from "@/components/waveform-bars";
+import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
+
+const ALBUM_COVERS = [
+  require("../../../assets/images/albums/neon_nights.png"),
+  require("../../../assets/images/albums/golden_hour.png"),
+  require("../../../assets/images/albums/eclipse.png"),
+  require("../../../assets/images/albums/pulse.png"),
+];
+
+const WORKOUT_MODES = [
+  { id: "run",   label: "Outdoor Run",   icon: "directions-run" as const,  targetBpm: 145 },
+  { id: "walk",  label: "Power Walk",   icon: "directions-walk" as const, targetBpm: 120 },
+  { id: "cycle", label: "Cycling",      icon: "pedal-bike" as const,      targetBpm: 132 },
+  { id: "hiit",  label: "HIIT Cardio",  icon: "bolt" as const,            targetBpm: 155 },
+];
 
 export function ActivityScreen() {
   const { theme } = useTheme();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [activityEnabled, setActivityEnabled] = useState(false);
+  const [activityEnabled, setActivityEnabled] = useState(true);
+  const [selectedMode, setSelectedMode] = useState("run");
 
   const pulseScale = useSharedValue(1);
+
+  const activeWorkout = WORKOUT_MODES.find((m) => m.id === selectedMode) ?? WORKOUT_MODES[0];
 
   useEffect(() => {
     if (activityEnabled) {
       pulseScale.value = withRepeat(
         withSequence(
-          withTiming(1.12, { duration: 500, easing: Easing.inOut(Easing.sin) }),
-          withTiming(1, { duration: 500, easing: Easing.inOut(Easing.sin) }),
+          withTiming(1.1, { duration: 450, easing: Easing.inOut(Easing.sin) }),
+          withTiming(1, { duration: 450, easing: Easing.inOut(Easing.sin) }),
         ),
         -1,
         false,
@@ -48,130 +70,185 @@ export function ActivityScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
-      {/* Ambient glow */}
+      {/* Ambient background glow */}
       <View
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 280,
-          backgroundColor: `${theme.accent}09`,
-          borderBottomLeftRadius: 180,
-          borderBottomRightRadius: 180,
+          top: 0, left: 0, right: 0, height: 300,
+          backgroundColor: activityEnabled ? `${theme.accent}12` : `${theme.accent}05`,
+          borderBottomLeftRadius: 200,
+          borderBottomRightRadius: 200,
         }}
       />
 
       <ScrollView
         contentInsetAdjustmentBehavior="never"
         contentContainerStyle={{
-          paddingTop: insets.top + 16,
+          paddingTop: insets.top + 14,
           paddingHorizontal: 20,
           paddingBottom: insets.bottom + 110,
           gap: 16,
         }}
       >
-        {/* ── Header ── */}
-        <View style={{ gap: 2 }}>
-          <Text style={{ color: theme.textMuted, fontSize: 12, fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.8 }}>
-            Cadence Sync
-          </Text>
-          <Text style={{ color: theme.textPrimary, fontSize: 26, fontWeight: "800", letterSpacing: -0.5 }}>
-            Activity Mode
-          </Text>
-        </View>
-
-        {/* ── Enable Card ── */}
-        <View
-          style={{
-            backgroundColor: activityEnabled ? `${theme.accent}18` : theme.surface,
-            borderRadius: 20,
-            borderWidth: 1,
-            borderColor: activityEnabled ? `${theme.accent}35` : theme.border,
-            padding: 18,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 14,
-          }}
-        >
+        {/* ── Header Row ── */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ gap: 2 }}>
+            <Text style={{ color: theme.textMuted, fontSize: 11, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1 }}>
+              Real-Time Sensor Sync
+            </Text>
+            <Text style={{ color: theme.textPrimary, fontSize: 26, fontWeight: "800", letterSpacing: -0.5 }}>
+              Activity Cadence
+            </Text>
+          </View>
           <View
             style={{
-              width: 46,
-              height: 46,
-              borderRadius: 23,
-              backgroundColor: activityEnabled ? `${theme.accent}28` : theme.surfaceElevated,
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundColor: activityEnabled ? `${theme.accent}20` : theme.surface,
+              borderRadius: 14,
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              borderWidth: 1,
+              borderColor: activityEnabled ? theme.accent : theme.border,
             }}
           >
-            <MaterialIcons
-              name="directions-walk"
-              size={24}
-              color={activityEnabled ? theme.accent : theme.textMuted}
-            />
+            <Text style={{ color: activityEnabled ? theme.accent : theme.textMuted, fontSize: 11, fontWeight: "800" }}>
+              {activityEnabled ? "LIVE SYNC ON" : "PAUSED"}
+            </Text>
           </View>
-          <View style={{ flex: 1, gap: 2 }}>
-            <Text style={{ color: theme.textPrimary, fontSize: 15, fontWeight: "700" }}>Step Cadence Sync</Text>
-            <Text style={{ color: theme.textMuted, fontSize: 12 }}>Matches BPM to your walking pace</Text>
-          </View>
-          <Switch
-            value={activityEnabled}
-            onValueChange={(v) => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); setActivityEnabled(v); }}
-            trackColor={{ false: theme.border, true: theme.accent }}
-            thumbColor="#ffffff"
-          />
         </View>
 
-        {/* ── Live Metrics ── */}
+        {/* ── Workout Modes Selector Strip ── */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+          {WORKOUT_MODES.map((mode) => {
+            const isSelected = selectedMode === mode.id;
+            return (
+              <Pressable
+                key={mode.id}
+                onPress={() => { Haptics.selectionAsync(); setSelectedMode(mode.id); }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                  paddingHorizontal: 16,
+                  paddingVertical: 10,
+                  borderRadius: 20,
+                  backgroundColor: isSelected ? theme.accent : theme.surface,
+                  borderWidth: 1,
+                  borderColor: isSelected ? theme.accent : theme.border,
+                }}
+              >
+                <MaterialIcons name={mode.icon} size={18} color={isSelected ? "#fff" : theme.textSecondary} />
+                <Text style={{ color: isSelected ? "#fff" : theme.textSecondary, fontSize: 13, fontWeight: "700" }}>
+                  {mode.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+
+        {/* ── Main Cadence Gauge Hero Card ── */}
+        <View
+          style={{
+            borderRadius: 24,
+            overflow: "hidden",
+            borderWidth: 1,
+            borderColor: activityEnabled ? `${theme.accent}40` : theme.border,
+            backgroundColor: theme.surfaceElevated,
+          }}
+        >
+          <BlurView tint="dark" intensity={70} style={{ padding: 20, gap: 16 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <View style={{ gap: 2 }}>
+                <Text style={{ color: theme.textMuted, fontSize: 11, fontWeight: "700", textTransform: "uppercase" }}>
+                  Target Match: {activeWorkout.label}
+                </Text>
+                <Text style={{ color: theme.textPrimary, fontSize: 18, fontWeight: "800" }}>
+                  {activityEnabled ? `Cadence Locked @ ${activeWorkout.targetBpm} BPM` : "Sensor Sync Offline"}
+                </Text>
+              </View>
+              <Switch
+                value={activityEnabled}
+                onValueChange={(v) => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); setActivityEnabled(v); }}
+                trackColor={{ false: theme.border, true: theme.accent }}
+                thumbColor="#ffffff"
+              />
+            </View>
+
+            {/* Big Pulse Ring & Center BPM gauge */}
+            <View style={{ alignItems: "center", marginVertical: 10 }}>
+              <Animated.View
+                style={[
+                  pulseStyle,
+                  {
+                    width: 140,
+                    height: 140,
+                    borderRadius: 70,
+                    backgroundColor: activityEnabled ? `${theme.accent}20` : theme.surface,
+                    borderWidth: 3,
+                    borderColor: activityEnabled ? theme.accent : theme.border,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    shadowColor: theme.accent,
+                    shadowOpacity: activityEnabled ? 0.5 : 0,
+                    shadowRadius: 20,
+                    elevation: 10,
+                  },
+                ]}
+              >
+                <MaterialIcons
+                  name={activeWorkout.icon}
+                  size={28}
+                  color={activityEnabled ? theme.accent : theme.textMuted}
+                />
+                <Text
+                  style={{
+                    color: activityEnabled ? theme.accent : theme.textPrimary,
+                    fontSize: 34,
+                    fontWeight: "900",
+                    fontVariant: ["tabular-nums"],
+                    marginTop: 2,
+                  }}
+                >
+                  {activityEnabled ? activeWorkout.targetBpm : "--"}
+                </Text>
+                <Text style={{ color: theme.textMuted, fontSize: 10, fontWeight: "700", textTransform: "uppercase" }}>
+                  BPM Pace
+                </Text>
+              </Animated.View>
+            </View>
+
+            {/* Live Status tagline */}
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }}>
+              <WaveformBars barCount={5} height={14} playing={activityEnabled} color={theme.accent} />
+              <Text style={{ color: theme.textSecondary, fontSize: 12, fontWeight: "600" }}>
+                {activityEnabled ? "Pace matching track queue automatically" : "Enable sync to adapt music tempo"}
+              </Text>
+            </View>
+          </BlurView>
+        </View>
+
+        {/* ── Live Sensor Metrics Bar ── */}
         <View style={{ flexDirection: "row", gap: 12 }}>
           {/* Steps/min */}
-          <Animated.View
-            style={[
-              pulseStyle,
-              {
-                flex: 1,
-                backgroundColor: theme.surface,
-                borderRadius: 20,
-                borderWidth: 1,
-                borderColor: activityEnabled ? `${theme.accent}30` : theme.border,
-                padding: 16,
-                alignItems: "center",
-                gap: 4,
-              },
-            ]}
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: theme.surface,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: activityEnabled ? `${theme.accent}30` : theme.border,
+              padding: 14,
+              alignItems: "center",
+              gap: 4,
+            }}
           >
-            <MaterialIcons
-              name="directions-run"
-              size={22}
-              color={activityEnabled ? theme.accent : theme.textMuted}
-            />
-            <Text style={{ color: activityEnabled ? theme.accent : theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
+            <MaterialIcons name="directions-run" size={20} color={activityEnabled ? theme.accent : theme.textMuted} />
+            <Text style={{ color: activityEnabled ? theme.accent : theme.textPrimary, fontSize: 24, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
               {activityEnabled ? MOCK_ACTIVITY.stepsPerMinute : "--"}
             </Text>
             <Text style={{ color: theme.textMuted, fontSize: 10 }}>steps/min</Text>
-          </Animated.View>
-
-          {/* Target BPM */}
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: theme.surface,
-              borderRadius: 20,
-              borderWidth: 1,
-              borderColor: theme.border,
-              padding: 16,
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <MaterialIcons name="music-note" size={22} color={theme.textMuted} />
-            <Text style={{ color: theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
-              {activityEnabled ? MOCK_ACTIVITY.targetBpm : "--"}
-            </Text>
-            <Text style={{ color: theme.textMuted, fontSize: 10 }}>target BPM</Text>
           </View>
 
-          {/* Heart rate */}
+          {/* Heart Rate */}
           <View
             style={{
               flex: 1,
@@ -179,20 +256,40 @@ export function ActivityScreen() {
               borderRadius: 20,
               borderWidth: 1,
               borderColor: theme.border,
-              padding: 16,
+              padding: 14,
               alignItems: "center",
               gap: 4,
             }}
           >
-            <MaterialIcons name="favorite" size={22} color="#ff3366" />
-            <Text style={{ color: theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
+            <MaterialIcons name="favorite" size={20} color="#ff3366" />
+            <Text style={{ color: theme.textPrimary, fontSize: 24, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
               {activityEnabled ? MOCK_ACTIVITY.heartRate : "--"}
             </Text>
             <Text style={{ color: theme.textMuted, fontSize: 10 }}>bpm HR</Text>
           </View>
+
+          {/* Energy Burn */}
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: theme.surface,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: theme.border,
+              padding: 14,
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <MaterialIcons name="local-fire-department" size={20} color="#ffaa22" />
+            <Text style={{ color: theme.textPrimary, fontSize: 24, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
+              {activityEnabled ? MOCK_ACTIVITY.caloriesBurned : "--"}
+            </Text>
+            <Text style={{ color: theme.textMuted, fontSize: 10 }}>kcal burned</Text>
+          </View>
         </View>
 
-        {/* ── HR Chart ── */}
+        {/* ── Cadence History Graph ── */}
         <View
           style={{
             backgroundColor: theme.surface,
@@ -200,79 +297,42 @@ export function ActivityScreen() {
             borderWidth: 1,
             borderColor: theme.border,
             padding: 16,
-            gap: 10,
+            gap: 12,
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "700" }}>Cadence History</Text>
             <Text style={{ color: theme.textMuted, fontSize: 11 }}>Last 20 beats</Text>
           </View>
-
-          {/* Bar chart */}
-          <View
-            style={{
-              height: 60,
-              flexDirection: "row",
-              alignItems: "flex-end",
-              gap: 3,
-            }}
-          >
+          <View style={{ height: 50, flexDirection: "row", alignItems: "flex-end", gap: 4 }}>
             {MOCK_HR_CHART.map((v, i) => (
               <View
                 key={i}
                 style={{
                   flex: 1,
-                  height: Math.max(4, v * 56),
+                  height: Math.max(6, v * 46),
                   backgroundColor: activityEnabled ? theme.accent : theme.surfaceElevated,
-                  borderRadius: 3,
-                  opacity: 0.4 + v * 0.6,
+                  borderRadius: 4,
+                  opacity: 0.45 + v * 0.55,
                 }}
               />
             ))}
           </View>
         </View>
 
-        {/* ── Session Stats ── */}
-        {activityEnabled && (
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 12,
-            }}
-          >
-            {[
-              { label: "Duration", value: formatDuration(MOCK_ACTIVITY.sessionDuration), icon: "timer" as const },
-              { label: "Calories", value: `${MOCK_ACTIVITY.caloriesBurned} kcal`, icon: "local-fire-department" as const },
-            ].map((s) => (
-              <View
-                key={s.label}
-                style={{
-                  flex: 1,
-                  backgroundColor: theme.surface,
-                  borderRadius: 16,
-                  borderWidth: 1,
-                  borderColor: theme.border,
-                  padding: 14,
-                  gap: 6,
-                }}
-              >
-                <MaterialIcons name={s.icon} size={20} color={theme.accent} />
-                <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "700" }}>{s.value}</Text>
-                <Text style={{ color: theme.textMuted, fontSize: 11 }}>{s.label}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* ── Recommended Tracks ── */}
+        {/* ── Recommended Workout Tracks ── */}
         <View style={{ gap: 10 }}>
-          <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "700" }}>
-            Recommended Tracks
-          </Text>
-          {recommended.map((track) => (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "800" }}>
+              Pace-Matched Playlist
+            </Text>
+            <Text style={{ color: theme.accent, fontSize: 12, fontWeight: "700" }}>Auto-Matched</Text>
+          </View>
+
+          {recommended.map((track, idx) => (
             <Pressable
               key={track.id}
-              onPress={() => Haptics.selectionAsync()}
+              onPress={() => { Haptics.selectionAsync(); router.push("/(player)"); }}
               style={({ pressed }) => ({
                 flexDirection: "row",
                 alignItems: "center",
@@ -285,40 +345,29 @@ export function ActivityScreen() {
                 opacity: pressed ? 0.75 : 1,
               })}
             >
-              <View
-                style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: 11,
-                  backgroundColor: track.artworkColor,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "hidden",
-                }}
-              >
-                <View
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    width: "60%",
-                    height: "60%",
-                    backgroundColor: track.artworkColorSecondary,
-                    borderTopLeftRadius: 14,
-                  }}
-                />
-                <MaterialIcons name="music-note" size={20} color="rgba(255,255,255,0.8)" />
-              </View>
+              <Image
+                source={ALBUM_COVERS[idx % ALBUM_COVERS.length]}
+                style={{ width: 48, height: 48, borderRadius: 12 }}
+                contentFit="cover"
+              />
               <View style={{ flex: 1, gap: 3 }}>
-                <Text numberOfLines={1} style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "600" }}>{track.title}</Text>
+                <Text numberOfLines={1} style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "600" }}>
+                  {track.title}
+                </Text>
                 <Text style={{ color: theme.textSecondary, fontSize: 12 }}>{track.artist}</Text>
               </View>
-              <BpmBadge bpm={track.bpm} size="md" />
+
+              <View style={{ alignItems: "flex-end", gap: 4 }}>
+                <BpmBadge bpm={track.bpm} size="md" />
+                <View style={{ backgroundColor: `${theme.accent}18`, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 }}>
+                  <Text style={{ color: theme.accent, fontSize: 9, fontWeight: "800" }}>MATCH</Text>
+                </View>
+              </View>
             </Pressable>
           ))}
         </View>
 
-        {/* ── Privacy notice ── */}
+        {/* ── Privacy Notice ── */}
         <View
           style={{
             backgroundColor: `${theme.accent}10`,
@@ -333,9 +382,9 @@ export function ActivityScreen() {
         >
           <MaterialIcons name="security" size={18} color={theme.accent} style={{ marginTop: 1 }} />
           <Text style={{ color: theme.textSecondary, fontSize: 12, flex: 1, lineHeight: 18 }}>
-            Step sensor data is processed{" "}
+            Step sensor & health cadence data is processed{" "}
             <Text style={{ color: theme.accent, fontWeight: "700" }}>entirely on-device</Text>
-            {" "}and never shared.
+            {" "}and never leaves your device.
           </Text>
         </View>
       </ScrollView>

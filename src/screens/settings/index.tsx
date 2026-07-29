@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/theme-context";
 import { ALL_THEME_NAMES, THEMES } from "@/theme/colors";
 import { ThemeCard } from "@/components/theme-card";
+import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OnboardingContext } from "@/app/_layout";
 import * as Haptics from "expo-haptics";
@@ -83,6 +84,7 @@ export function SettingsScreen() {
   const { theme, themeName, setTheme } = useTheme();
   const insets = useSafeAreaInsets();
   const onboarding = useContext(OnboardingContext);
+  const router = useRouter();
 
   async function handleLogout() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -148,6 +150,10 @@ export function SettingsScreen() {
             </View>
           </View>
           <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push("/(settings)/edit-profile");
+            }}
             style={{
               paddingHorizontal: 14, paddingVertical: 8, borderRadius: 12,
               backgroundColor: `${theme.accent}20`, borderWidth: 1, borderColor: `${theme.accent}40`,
@@ -158,8 +164,21 @@ export function SettingsScreen() {
         </View>
       </View>
 
-      {/* ── Themes ── */}
-      <SectionHeader title="Appearance" theme={theme} />
+      {/* ── Themes / Appearance ── */}
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingRight: 20 }}>
+        <SectionHeader title="Appearance & Themes" theme={theme} />
+        <Pressable
+          onPress={() => {
+            Haptics.selectionAsync();
+            router.push("/(settings)/theme-preview");
+          }}
+          style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingTop: 12 }}
+        >
+          <Text style={{ color: theme.accent, fontSize: 12, fontWeight: "700" }}>Studio Preview</Text>
+          <MaterialIcons name="chevron-right" size={16} color={theme.accent} />
+        </Pressable>
+      </View>
+
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 4 }}>
         {ALL_THEME_NAMES.map((name) => (
           <ThemeCard

@@ -12,9 +12,17 @@ export default function SettingsLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen
+        name="edit-profile"
+        options={{
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="theme-preview"
         options={{
           presentation: "modal",
+          headerShown: false,
         }}
       />
     </Stack>
