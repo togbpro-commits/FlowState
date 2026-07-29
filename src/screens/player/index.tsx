@@ -23,6 +23,7 @@ import { WaveformBars } from "@/components/waveform-bars";
 import { BpmBadge } from "@/components/bpm-badge";
 import * as Haptics from "expo-haptics";
 import { BlurView } from "expo-blur";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const ALBUM_ARTS = [
   require("../../../assets/images/albums/neon_nights.png"),
@@ -126,7 +127,7 @@ export function PlayerScreen() {
       >
         <BlurView tint="dark" intensity={70} style={{ width: 40, height: 40, borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
           <Pressable style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Image source="sf:chevron.down" style={{ width: 16, height: 16, tintColor: "#fff" }} contentFit="contain" />
+            <MaterialIcons name="keyboard-arrow-down" size={24} color="#fff" />
           </Pressable>
         </BlurView>
 
@@ -141,7 +142,7 @@ export function PlayerScreen() {
 
         <BlurView tint="dark" intensity={70} style={{ width: 40, height: 40, borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
           <Pressable style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Image source="sf:ellipsis" style={{ width: 18, height: 18, tintColor: "#fff" }} contentFit="contain" />
+            <MaterialIcons name="more-horiz" size={24} color="#fff" />
           </Pressable>
         </BlurView>
       </View>
@@ -236,10 +237,10 @@ export function PlayerScreen() {
             </View>
             <View style={{ alignItems: "flex-end", gap: 8, marginLeft: 10 }}>
               <Pressable onPress={() => { Haptics.selectionAsync(); setIsLiked((l) => !l); }}>
-                <Image
-                  source={isLiked ? "sf:heart.fill" : "sf:heart"}
-                  style={{ width: 22, height: 22, tintColor: isLiked ? "#ff3366" : "rgba(255,255,255,0.5)" }}
-                  contentFit="contain"
+                <MaterialIcons
+                  name={isLiked ? "favorite" : "favorite-border"}
+                  size={22}
+                  color={isLiked ? "#ff3366" : "rgba(255,255,255,0.5)"}
                 />
               </Pressable>
               <WaveformBars barCount={6} height={18} playing={isPlaying} color={theme.accent} />
@@ -261,11 +262,11 @@ export function PlayerScreen() {
           {/* Controls */}
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Pressable onPress={() => { Haptics.selectionAsync(); setIsShuffled((s) => !s); }}>
-              <Image source="sf:shuffle" style={{ width: 22, height: 22, tintColor: isShuffled ? theme.accent : "rgba(255,255,255,0.5)" }} contentFit="contain" />
+              <MaterialIcons name="shuffle" size={24} color={isShuffled ? theme.accent : "rgba(255,255,255,0.5)"} />
             </Pressable>
 
             <Pressable onPress={skipPrev}>
-              <Image source="sf:backward.fill" style={{ width: 30, height: 30, tintColor: "#fff" }} contentFit="contain" />
+              <MaterialIcons name="skip-previous" size={36} color="#fff" />
             </Pressable>
 
             <Pressable
@@ -281,19 +282,19 @@ export function PlayerScreen() {
                 elevation: 12,
               }}
             >
-              <Image
-                source={isPlaying ? "sf:pause.fill" : "sf:play.fill"}
-                style={{ width: 26, height: 26, tintColor: "#0a0a12" }}
-                contentFit="contain"
+              <MaterialIcons
+                name={isPlaying ? "pause" : "play-arrow"}
+                size={34}
+                color="#0a0a12"
               />
             </Pressable>
 
             <Pressable onPress={skipNext}>
-              <Image source="sf:forward.fill" style={{ width: 30, height: 30, tintColor: "#fff" }} contentFit="contain" />
+              <MaterialIcons name="skip-next" size={36} color="#fff" />
             </Pressable>
 
             <Pressable onPress={() => { Haptics.selectionAsync(); setIsRepeating((r) => !r); }}>
-              <Image source="sf:repeat" style={{ width: 22, height: 22, tintColor: isRepeating ? theme.accent : "rgba(255,255,255,0.5)" }} contentFit="contain" />
+              <MaterialIcons name="repeat" size={24} color={isRepeating ? theme.accent : "rgba(255,255,255,0.5)"} />
             </Pressable>
           </View>
 

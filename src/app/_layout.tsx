@@ -84,6 +84,7 @@ function FlowStateTabBar({ state, navigation }: TabBarProps) {
           return (
             <Pressable
               key={route.key}
+              android_ripple={null}
               onPress={() => {
                 const event = navigation.emit({
                   type: "tabPress",
@@ -94,27 +95,34 @@ function FlowStateTabBar({ state, navigation }: TabBarProps) {
                   navigation.navigate(route.name as any);
                 }
               }}
-              style={{
+              style={({ pressed }) => ({
                 flex: 1,
                 height: PILL_HEIGHT,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
+                opacity: pressed ? 0.7 : 1,
+              })}
             >
               <View
                 style={{
-                  width: 46,
-                  height: 34,
-                  borderRadius: 17,
-                  backgroundColor: isFocused ? `${theme.accent}28` : "transparent",
-                  justifyContent: "center",
                   alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
                 }}
               >
                 <MaterialIcons
                   name={def.icon}
-                  size={24}
+                  size={26}
                   color={tint}
+                />
+                {/* Active indicator dot */}
+                <View
+                  style={{
+                    width: 4,
+                    height: 4,
+                    borderRadius: 2,
+                    backgroundColor: isFocused ? theme.accent : "transparent",
+                  }}
                 />
               </View>
             </Pressable>

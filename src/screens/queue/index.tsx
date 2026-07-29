@@ -8,6 +8,7 @@ import { MOCK_TRACKS, SortMode, sortTracksByMode, formatDuration } from "@/data/
 import { SequencerSortBar } from "@/components/sequencer-sort-bar";
 import { BpmBadge } from "@/components/bpm-badge";
 import { FormatBadge } from "@/components/format-badge";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 export function QueueScreen() {
@@ -153,7 +154,7 @@ export function QueueScreen() {
                     borderTopLeftRadius: 14,
                   }}
                 />
-                <Image source="sf:music.note" style={{ width: 18, height: 18, tintColor: "rgba(255,255,255,0.75)" }} contentFit="contain" />
+                <MaterialIcons name="music-note" size={20} color="rgba(255,255,255,0.75)" />
               </View>
 
               {/* Info */}

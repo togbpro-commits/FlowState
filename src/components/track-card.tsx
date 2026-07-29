@@ -14,6 +14,8 @@ import { FormatBadge } from "./format-badge";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+import { MaterialIcons } from "@expo/vector-icons";
+
 interface TrackCardProps {
   track: Track;
   onPress?: () => void;
@@ -110,11 +112,10 @@ export function TrackCard({
             borderTopLeftRadius: 20,
           }}
         />
-        {/* Music note icon */}
-        <Image
-          source="sf:music.note"
-          style={{ width: 22, height: 22, tintColor: "#ffffffaa" }}
-          contentFit="contain"
+        <MaterialIcons
+          name="music-note"
+          size={24}
+          color="#ffffffaa"
         />
       </View>
 

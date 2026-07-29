@@ -6,7 +6,7 @@ import { MOCK_TRACKS } from "@/data/mock-tracks";
 import { BpmBadge } from "@/components/bpm-badge";
 import { FormatBadge } from "@/components/format-badge";
 import { WaveformBars } from "@/components/waveform-bars";
-import { Image } from "expo-image";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function TrackDetailRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -72,11 +72,7 @@ export default function TrackDetailRoute() {
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <Image
-            source="sf:waveform.and.magnifyingglass"
-            style={{ width: 18, height: 18, tintColor: theme.accent }}
-            contentFit="contain"
-          />
+          <MaterialIcons name="analytics" size={20} color={theme.accent} />
           <Text style={{ color: theme.textPrimary, fontSize: 15, fontWeight: "700" }}>
             Audio Analysis
           </Text>

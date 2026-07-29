@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "@/theme/theme-context";
 import { MOCK_ACTIVITY, MOCK_HR_CHART, MOCK_TRACKS, formatDuration } from "@/data/mock-tracks";
 import { BpmBadge } from "@/components/bpm-badge";
@@ -103,10 +104,10 @@ export function ActivityScreen() {
               alignItems: "center",
             }}
           >
-            <Image
-              source="sf:figure.walk"
-              style={{ width: 22, height: 22, tintColor: activityEnabled ? theme.accent : theme.textMuted }}
-              contentFit="contain"
+            <MaterialIcons
+              name="directions-walk"
+              size={24}
+              color={activityEnabled ? theme.accent : theme.textMuted}
             />
           </View>
           <View style={{ flex: 1, gap: 2 }}>
@@ -139,10 +140,10 @@ export function ActivityScreen() {
               },
             ]}
           >
-            <Image
-              source="sf:shoeprints.walk"
-              style={{ width: 20, height: 20, tintColor: activityEnabled ? theme.accent : theme.textMuted }}
-              contentFit="contain"
+            <MaterialIcons
+              name="directions-run"
+              size={22}
+              color={activityEnabled ? theme.accent : theme.textMuted}
             />
             <Text style={{ color: activityEnabled ? theme.accent : theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
               {activityEnabled ? MOCK_ACTIVITY.stepsPerMinute : "--"}
@@ -163,7 +164,7 @@ export function ActivityScreen() {
               gap: 4,
             }}
           >
-            <Image source="sf:music.note" style={{ width: 20, height: 20, tintColor: theme.textMuted }} contentFit="contain" />
+            <MaterialIcons name="music-note" size={22} color={theme.textMuted} />
             <Text style={{ color: theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
               {activityEnabled ? MOCK_ACTIVITY.targetBpm : "--"}
             </Text>
@@ -183,7 +184,7 @@ export function ActivityScreen() {
               gap: 4,
             }}
           >
-            <Image source="sf:heart.fill" style={{ width: 20, height: 20, tintColor: "#ff3366" }} contentFit="contain" />
+            <MaterialIcons name="favorite" size={22} color="#ff3366" />
             <Text style={{ color: theme.textPrimary, fontSize: 28, fontWeight: "800", fontVariant: ["tabular-nums"] }}>
               {activityEnabled ? MOCK_ACTIVITY.heartRate : "--"}
             </Text>
@@ -240,8 +241,8 @@ export function ActivityScreen() {
             }}
           >
             {[
-              { label: "Duration", value: formatDuration(MOCK_ACTIVITY.sessionDuration), icon: "sf:timer" },
-              { label: "Calories", value: `${MOCK_ACTIVITY.caloriesBurned} kcal`, icon: "sf:flame.fill" },
+              { label: "Duration", value: formatDuration(MOCK_ACTIVITY.sessionDuration), icon: "timer" as const },
+              { label: "Calories", value: `${MOCK_ACTIVITY.caloriesBurned} kcal`, icon: "local-fire-department" as const },
             ].map((s) => (
               <View
                 key={s.label}
@@ -255,7 +256,7 @@ export function ActivityScreen() {
                   gap: 6,
                 }}
               >
-                <Image source={s.icon} style={{ width: 18, height: 18, tintColor: theme.accent }} contentFit="contain" />
+                <MaterialIcons name={s.icon} size={20} color={theme.accent} />
                 <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: "700" }}>{s.value}</Text>
                 <Text style={{ color: theme.textMuted, fontSize: 11 }}>{s.label}</Text>
               </View>
@@ -306,7 +307,7 @@ export function ActivityScreen() {
                     borderTopLeftRadius: 14,
                   }}
                 />
-                <Image source="sf:music.note" style={{ width: 18, height: 18, tintColor: "rgba(255,255,255,0.8)" }} contentFit="contain" />
+                <MaterialIcons name="music-note" size={20} color="rgba(255,255,255,0.8)" />
               </View>
               <View style={{ flex: 1, gap: 3 }}>
                 <Text numberOfLines={1} style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "600" }}>{track.title}</Text>
@@ -330,7 +331,7 @@ export function ActivityScreen() {
             alignItems: "flex-start",
           }}
         >
-          <Image source="sf:lock.shield" style={{ width: 18, height: 18, tintColor: theme.accent, marginTop: 1 }} contentFit="contain" />
+          <MaterialIcons name="security" size={18} color={theme.accent} style={{ marginTop: 1 }} />
           <Text style={{ color: theme.textSecondary, fontSize: 12, flex: 1, lineHeight: 18 }}>
             Step sensor data is processed{" "}
             <Text style={{ color: theme.accent, fontWeight: "700" }}>entirely on-device</Text>

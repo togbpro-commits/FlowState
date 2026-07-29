@@ -12,6 +12,7 @@ import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { OnboardingContext } from "@/app/_layout";
+import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 
 const SOCIAL_BUTTONS = [
@@ -113,11 +114,7 @@ export function OnboardingScreen() {
             alignItems: "center",
           }}
         >
-          <Image
-            source="sf:waveform"
-            style={{ width: 20, height: 20, tintColor: "#fff" }}
-            contentFit="contain"
-          />
+          <MaterialIcons name="graphic-eq" size={22} color="#fff" />
         </View>
         <Text style={{ color: "#fff", fontSize: 18, fontWeight: "800", letterSpacing: -0.5 }}>
           FlowState
@@ -246,7 +243,7 @@ function AuthStep({
     <View style={{ gap: 16 }}>
       {/* Back */}
       <Pressable onPress={onBack} style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 4 }}>
-        <Image source="sf:chevron.left" style={{ width: 14, height: 14, tintColor: "rgba(255,255,255,0.5)" }} contentFit="contain" />
+        <MaterialIcons name="chevron-left" size={20} color="rgba(255,255,255,0.5)" />
         <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Back</Text>
       </Pressable>
 
@@ -296,11 +293,7 @@ function AuthStep({
           <Text style={{ color: btn.textColor, fontSize: 15, fontWeight: "600", flex: 1 }}>
             {btn.label}
           </Text>
-          <Image
-            source="sf:chevron.right"
-            style={{ width: 14, height: 14, tintColor: btn.textColor + "88" }}
-            contentFit="contain"
-          />
+          <MaterialIcons name="chevron-right" size={20} color={btn.textColor + "88"} />
         </Pressable>
       ))}
 
@@ -326,7 +319,7 @@ function AuthStep({
           transform: [{ scale: pressed ? 0.97 : 1 }],
         })}
       >
-        <Image source="sf:envelope" style={{ width: 18, height: 18, tintColor: "#fff" }} contentFit="contain" />
+        <MaterialIcons name="email" size={20} color="#fff" />
         <Text style={{ color: "#fff", fontSize: 15, fontWeight: "600" }}>Continue with Email</Text>
       </Pressable>
 

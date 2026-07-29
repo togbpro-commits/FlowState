@@ -153,11 +153,11 @@ export function sortTracksByMode(tracks: Track[], mode: SortMode): Track[] {
 }
 
 export const SORT_MODES: { mode: SortMode; label: string; icon: string }[] = [
-  { mode: "ascend",  label: "BPM ↑",  icon: "arrow.up" },
-  { mode: "descend", label: "BPM ↓",  icon: "arrow.down" },
-  { mode: "valley",  label: "Valley", icon: "waveform.path" },
-  { mode: "peak",    label: "Peak",   icon: "waveform" },
-  { mode: "smart",   label: "Smart",  icon: "sparkles" },
+  { mode: "ascend",  label: "BPM ↑",  icon: "north" },
+  { mode: "descend", label: "BPM ↓",  icon: "south" },
+  { mode: "valley",  label: "Valley", icon: "show-chart" },
+  { mode: "peak",    label: "Peak",   icon: "graphic-eq" },
+  { mode: "smart",   label: "Smart",  icon: "auto-awesome" },
 ];
 
 export const FORMAT_COLORS: Record<AudioFormat, { bg: string; text: string; lossless: boolean }> = {
@@ -184,9 +184,9 @@ export const MOCK_HR_CHART: number[] = [
 ];
 
 export const TRANSITION_TYPES = [
-  { id: "crossfade", label: "Crossfade",   icon: "arrow.left.arrow.right", description: "Smooth 4-bar blend" },
-  { id: "echo",      label: "Echo Tail",   icon: "waveform.path.ecg",      description: "Natural reverb decay" },
-  { id: "beatmatch", label: "Beat Match",  icon: "metronome",               description: "BPM-synced transition" },
+  { id: "crossfade", label: "Crossfade",   icon: "swap-horiz",   description: "Smooth 4-bar blend" },
+  { id: "echo",      label: "Echo Tail",   icon: "graphic-eq",   description: "Natural reverb decay" },
+  { id: "beatmatch", label: "Beat Match",  icon: "equalizer",    description: "BPM-synced transition" },
 ] as const;
 
 export type TransitionType = typeof TRANSITION_TYPES[number]["id"];

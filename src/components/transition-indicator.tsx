@@ -7,7 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTheme } from "@/theme/theme-context";
 import { TransitionType, TRANSITION_TYPES } from "@/data/mock-tracks";
-import { Image } from "expo-image";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface TransitionIndicatorProps {
   activeType: TransitionType;
@@ -120,10 +120,10 @@ function TransitionPill({
           },
         ]}
       >
-        <Image
-          source={`sf:${icon}`}
-          style={{ width: 18, height: 18, tintColor: isActive ? accent : textMuted }}
-          contentFit="contain"
+        <MaterialIcons
+          name={icon as any}
+          size={20}
+          color={isActive ? accent : textMuted}
         />
         <Text
           style={{

@@ -8,26 +8,27 @@ import { ThemeCard } from "@/components/theme-card";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OnboardingContext } from "@/app/_layout";
 import * as Haptics from "expo-haptics";
+import { MaterialIcons } from "@expo/vector-icons";
 
 // ── Music player settings ──────────────────────────────────────────────────
 
 const PLAYBACK_SETTINGS = [
-  { icon: "sf:hifispeaker.2.fill",    title: "High Quality Streaming",  desc: "Stream in lossless quality when on Wi-Fi",         defaultOn: true },
-  { icon: "sf:arrow.down.circle.fill", title: "Auto-Download",           desc: "Download liked tracks automatically",              defaultOn: false },
-  { icon: "sf:speaker.wave.3.fill",   title: "Crossfade Transitions",   desc: "Blend between tracks with smart BPM matching",     defaultOn: true },
-  { icon: "sf:moon.fill",             title: "Sleep Timer",              desc: "Automatically stop playback after a set time",     defaultOn: false },
+  { icon: "graphic-eq" as const,            title: "High Quality Streaming",  desc: "Stream in lossless quality when on Wi-Fi",         defaultOn: true },
+  { icon: "cloud-download" as const,        title: "Auto-Download",           desc: "Download liked tracks automatically",              defaultOn: false },
+  { icon: "tune" as const,                  title: "Crossfade Transitions",   desc: "Blend between tracks with smart BPM matching",     defaultOn: true },
+  { icon: "bedtime" as const,               title: "Sleep Timer",              desc: "Automatically stop playback after a set time",     defaultOn: false },
 ];
 
 const AUDIO_SETTINGS = [
-  { icon: "sf:waveform.and.magnifyingglass", title: "BPM Auto-Detection",  desc: "Analyse BPM from your imported audio files",  defaultOn: true },
-  { icon: "sf:pianokeys",                    title: "Key Detection",        desc: "Camelot wheel compatible musical key tagging", defaultOn: true },
-  { icon: "sf:music.quarternote.3",          title: "Genre AI Tagging",     desc: "Smart genre classification from audio",        defaultOn: false },
-  { icon: "sf:waveform.path.ecg",            title: "Energy Analysis",      desc: "Detect track energy & danceability score",      defaultOn: true },
+  { icon: "speed" as const,                 title: "BPM Auto-Detection",  desc: "Analyse BPM from your imported audio files",  defaultOn: true },
+  { icon: "piano" as const,                 title: "Key Detection",        desc: "Camelot wheel compatible musical key tagging", defaultOn: true },
+  { icon: "category" as const,              title: "Genre AI Tagging",     desc: "Smart genre classification from audio",        defaultOn: false },
+  { icon: "bar-chart" as const,             title: "Energy Analysis",      desc: "Detect track energy & danceability score",      defaultOn: true },
 ];
 
 const SOCIAL_SETTINGS = [
-  { icon: "sf:square.and.arrow.up",  title: "Share Listening Activity", desc: "Let friends see what you're playing",            defaultOn: false },
-  { icon: "sf:person.2.fill",        title: "Friend Suggestions",       desc: "Get playlist suggestions from friends' taste",    defaultOn: true },
+  { icon: "share" as const,                 title: "Share Listening Activity", desc: "Let friends see what you're playing",            defaultOn: false },
+  { icon: "people" as const,                title: "Friend Suggestions",       desc: "Get playlist suggestions from friends' taste",    defaultOn: true },
 ];
 
 function SectionHeader({ title, theme }: { title: string; theme: any }) {
@@ -62,7 +63,7 @@ function ToggleRow({
           justifyContent: "center", alignItems: "center",
         }}
       >
-        <Image source={icon} style={{ width: 18, height: 18, tintColor: danger ? "#ff3366" : theme.accent }} contentFit="contain" />
+        <MaterialIcons name={icon as any} size={20} color={danger ? "#ff3366" : theme.accent} />
       </View>
       <View style={{ flex: 1, gap: 1 }}>
         <Text style={{ color: danger ? "#ff3366" : theme.textPrimary, fontSize: 14, fontWeight: "600" }}>{title}</Text>
@@ -188,7 +189,7 @@ export function SettingsScreen() {
             marginBottom: 8,
           }}
         >
-          <Image source="sf:lock.shield" style={{ width: 16, height: 16, tintColor: theme.accent, marginTop: 1 }} contentFit="contain" />
+          <MaterialIcons name="security" size={18} color={theme.accent} style={{ marginTop: 1 }} />
           <Text style={{ color: theme.textSecondary, fontSize: 12, flex: 1, lineHeight: 18 }}>
             All audio analysis runs{" "}
             <Text style={{ color: theme.accent, fontWeight: "700" }}>entirely on-device</Text>
@@ -207,10 +208,10 @@ export function SettingsScreen() {
       <SectionHeader title="About" theme={theme} />
       <View style={{ paddingHorizontal: 20, gap: 8 }}>
         {[
-          { icon: "sf:questionmark.circle", label: "Help & Support" },
-          { icon: "sf:doc.text",            label: "Terms of Service" },
-          { icon: "sf:hand.raised",         label: "Privacy Policy" },
-          { icon: "sf:star",                label: "Rate FlowState" },
+          { icon: "help-outline" as const, label: "Help & Support" },
+          { icon: "description" as const,  label: "Terms of Service" },
+          { icon: "privacy-tip" as const,  label: "Privacy Policy" },
+          { icon: "star-outline" as const, label: "Rate FlowState" },
         ].map((item) => (
           <Pressable
             key={item.label}
@@ -221,9 +222,9 @@ export function SettingsScreen() {
               opacity: pressed ? 0.7 : 1,
             })}
           >
-            <Image source={item.icon} style={{ width: 18, height: 18, tintColor: theme.textMuted }} contentFit="contain" />
+            <MaterialIcons name={item.icon} size={20} color={theme.textMuted} />
             <Text style={{ color: theme.textPrimary, fontSize: 14, fontWeight: "500", flex: 1 }}>{item.label}</Text>
-            <Image source="sf:chevron.right" style={{ width: 12, height: 12, tintColor: theme.textMuted }} contentFit="contain" />
+            <MaterialIcons name="chevron-right" size={20} color={theme.textMuted} />
           </Pressable>
         ))}
 
@@ -244,7 +245,7 @@ export function SettingsScreen() {
             opacity: pressed ? 0.7 : 1,
           })}
         >
-          <Image source="sf:rectangle.portrait.and.arrow.right" style={{ width: 18, height: 18, tintColor: "#ff3336" }} contentFit="contain" />
+          <MaterialIcons name="logout" size={20} color="#ff3336" />
           <Text style={{ color: "#ff3336", fontSize: 15, fontWeight: "700" }}>Sign Out</Text>
         </Pressable>
       </View>

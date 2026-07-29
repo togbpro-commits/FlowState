@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTheme } from "@/theme/theme-context";
 import { SortMode, SORT_MODES } from "@/data/mock-tracks";
-import { Image } from "expo-image";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface SequencerSortBarProps {
   activeMode: SortMode;
@@ -114,10 +114,10 @@ function SortPill({
           },
         ]}
       >
-        <Image
-          source={`sf:${icon}`}
-          style={{ width: 13, height: 13, tintColor: isActive ? accent : textMuted }}
-          contentFit="contain"
+        <MaterialIcons
+          name={icon as any}
+          size={16}
+          color={isActive ? accent : textMuted}
         />
         <Text
           style={{

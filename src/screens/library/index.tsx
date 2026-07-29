@@ -16,6 +16,7 @@ import { BpmBadge } from "@/components/bpm-badge";
 import { FormatBadge } from "@/components/format-badge";
 import * as Haptics from "expo-haptics";
 import { BlurView } from "expo-blur";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const CATEGORIES = ["All", "Pop", "Techno", "Hip-Hop", "Ambient", "House", "D&B"];
 
@@ -98,7 +99,7 @@ export function LibraryScreen() {
                     justifyContent: "center", alignItems: "center",
                   }}
                 >
-                  <Image source="sf:magnifyingglass" style={{ width: 16, height: 16, tintColor: showSearch ? "#fff" : theme.textSecondary }} contentFit="contain" />
+                  <MaterialIcons name="search" size={20} color={showSearch ? "#fff" : theme.textSecondary} />
                 </Pressable>
                 <Pressable
                   style={{
@@ -108,7 +109,7 @@ export function LibraryScreen() {
                     justifyContent: "center", alignItems: "center",
                   }}
                 >
-                  <Image source="sf:bell" style={{ width: 16, height: 16, tintColor: theme.textSecondary }} contentFit="contain" />
+                  <MaterialIcons name="notifications-none" size={20} color={theme.textSecondary} />
                 </Pressable>
               </View>
             </View>
@@ -123,7 +124,7 @@ export function LibraryScreen() {
                     flexDirection: "row", alignItems: "center", paddingHorizontal: 14,
                   }}
                 >
-                  <Image source="sf:magnifyingglass" style={{ width: 14, height: 14, tintColor: theme.textMuted, marginRight: 8 }} contentFit="contain" />
+                  <MaterialIcons name="search" size={18} color={theme.textMuted} style={{ marginRight: 8 }} />
                   <TextInput
                     value={query} onChangeText={setQuery}
                     placeholder="Search songs, artists…"
@@ -167,7 +168,7 @@ export function LibraryScreen() {
                     justifyContent: "center", alignItems: "center",
                   }}
                 >
-                  <Image source="sf:play.fill" style={{ width: 18, height: 18, tintColor: "#fff" }} contentFit="contain" />
+                  <MaterialIcons name="play-arrow" size={24} color="#fff" />
                 </View>
               </View>
             </Pressable>
@@ -269,7 +270,7 @@ function TrackRow({ track, onPress }: { track: Track; onPress: () => void }) {
       <View style={{ width: 52, height: 52, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
         <View style={{ flex: 1, backgroundColor: track.artworkColor, justifyContent: "center", alignItems: "center" }}>
           <View style={{ position: "absolute", bottom: 0, right: 0, width: "60%", height: "60%", backgroundColor: track.artworkColorSecondary, borderTopLeftRadius: 16 }} />
-          <Image source="sf:music.note" style={{ width: 22, height: 22, tintColor: "rgba(255,255,255,0.85)" }} contentFit="contain" />
+          <MaterialIcons name="music-note" size={24} color="rgba(255,255,255,0.85)" />
         </View>
       </View>
 
@@ -290,10 +291,10 @@ function TrackRow({ track, onPress }: { track: Track; onPress: () => void }) {
       {/* Actions */}
       <View style={{ alignItems: "flex-end", gap: 8 }}>
         <Pressable onPress={() => { Haptics.selectionAsync(); setLiked((l) => !l); }} hitSlop={8}>
-          <Image
-            source={liked ? "sf:heart.fill" : "sf:heart"}
-            style={{ width: 18, height: 18, tintColor: liked ? "#ff3366" : theme.textMuted }}
-            contentFit="contain"
+          <MaterialIcons
+            name={liked ? "favorite" : "favorite-border"}
+            size={20}
+            color={liked ? "#ff3366" : theme.textMuted}
           />
         </Pressable>
         <Text style={{ color: theme.textMuted, fontSize: 10, fontVariant: ["tabular-nums"] }}>
