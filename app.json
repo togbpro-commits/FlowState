@@ -8,7 +8,7 @@
     "scheme": "togbpro",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "bundleIdentifier": "com.togbpro.togbpro",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
